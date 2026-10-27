@@ -1,0 +1,250 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>SafeWatch</title>
+<meta name="description" content="SafeWatch: videos without the doomscroll. No comments, no accounts, parental controls built in.">
+<meta property="og:title" content="SafeWatch">
+<meta property="og:description" content="Videos without the doomscroll.">
+<meta property="og:image" content="SafeWatch.png">
+<link rel="icon" href="SafeWatch.png">
+<link rel="apple-touch-icon" href="SafeWatch.png">
+<meta name="theme-color" content="#fff7f1" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#140d12" media="(prefers-color-scheme: dark)">
+<style>
+  :root{
+    --bg:#fff7f1; --card:#ffffff; --ink:#22141c; --muted:#6f5b66; --line:#f1e2da;
+    --sun-1:#ffb347; --sun-2:#ff5e62; --sun-3:#d63b8c;
+    --sunset:linear-gradient(135deg,var(--sun-1),var(--sun-2) 55%,var(--sun-3));
+    --shadow:0 18px 50px -24px rgba(150,40,70,.35);
+    --ok:#1f9d6b;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{ --bg:#140d12; --card:#1f151c; --ink:#fbeef1; --muted:#b9a2ad; --line:#33242d;
+           --shadow:0 18px 50px -24px rgba(0,0,0,.7); --ok:#4fd39c; }
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 -apple-system,BlinkMacSystemFont,"SF Pro Text",system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+  a{color:inherit}
+  .wrap{max-width:980px;margin:0 auto;padding:0 20px}
+
+  /* top bar */
+  .bar{position:sticky;top:0;z-index:5;backdrop-filter:saturate(1.6) blur(16px);-webkit-backdrop-filter:saturate(1.6) blur(16px);
+       background:color-mix(in srgb,var(--bg) 78%,transparent);border-bottom:1px solid var(--line)}
+  .bar .wrap{display:flex;align-items:center;justify-content:space-between;height:60px}
+  .brand{display:flex;align-items:center;gap:10px;font-weight:700;text-decoration:none;letter-spacing:-.01em}
+  .brand img{width:30px;height:30px;border-radius:8px}
+  .pill{display:inline-flex;align-items:center;gap:8px;padding:9px 18px;border-radius:999px;background:var(--sunset);color:#fff;
+        font-weight:650;text-decoration:none;font-size:15px;box-shadow:var(--shadow)}
+
+  /* hero */
+  .hero{padding-top:72px;padding-bottom:40px;text-align:center}
+  .hero .icon{width:132px;height:132px;border-radius:30px;box-shadow:0 30px 60px -25px rgba(214,59,140,.6)}
+  .hero h1{font-size:clamp(38px,8vw,64px);line-height:1.04;letter-spacing:-.035em;margin:28px 0 14px}
+  .hero h1 span{background:var(--sunset);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .hero p{color:var(--muted);font-size:clamp(17px,2.4vw,20px);max-width:560px;margin:0 auto 28px}
+  .chips{display:flex;flex-wrap:wrap;justify-content:center;gap:10px;margin-top:30px}
+  .chip{padding:8px 14px;border-radius:999px;background:var(--card);border:1px solid var(--line);font-size:14px;font-weight:550}
+
+  /* sections */
+  section{padding:56px 0}
+  .kicker{font-size:13px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;background:var(--sunset);
+          -webkit-background-clip:text;background-clip:text;color:transparent}
+  h2{font-size:clamp(28px,5vw,40px);letter-spacing:-.03em;line-height:1.1;margin:8px 0 10px}
+  .lede{color:var(--muted);margin:0 0 26px;max-width:620px}
+
+  .card{background:var(--card);border:1px solid var(--line);border-radius:24px;padding:24px;box-shadow:var(--shadow)}
+  .step{display:flex;align-items:center;gap:12px;margin:0 0 6px;font-size:19px}
+  .num{display:inline-grid;place-items:center;width:30px;height:30px;border-radius:50%;background:var(--sunset);color:#fff;font-size:15px;font-weight:700;flex:none}
+  .muted{color:var(--muted)}
+  ol.how{margin:10px 0 18px;padding-left:20px;color:var(--muted);font-size:15px}
+  ol.how b{color:var(--ink)}
+
+  .terms{display:flex;gap:12px;align-items:flex-start;padding:16px 18px;border-radius:18px;border:1.5px dashed var(--sun-2);
+         background:color-mix(in srgb,var(--sun-2) 7%,var(--card));margin-bottom:18px;cursor:pointer}
+  .terms input{width:22px;height:22px;accent-color:var(--sun-2);margin:1px 0 0;flex:none}
+  .grid{display:grid;grid-template-columns:1fr;gap:18px}
+  @media (min-width:820px){.grid{grid-template-columns:5fr 7fr}}
+
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:12px 20px;border-radius:14px;border:0;
+       background:var(--sunset);color:#fff;font-weight:650;font-size:15.5px;text-decoration:none;transition:transform .15s,opacity .15s}
+  .btn:active{transform:scale(.97)}
+  .btn svg,.get svg{width:18px;height:18px}
+  .gated[aria-disabled="true"],.get[aria-disabled="true"]{opacity:.38;pointer-events:none;filter:grayscale(.4)}
+
+  .copies-head{display:flex;align-items:baseline;justify-content:space-between;gap:10px}
+  .count{font-size:13px;font-weight:650;color:var(--muted)}
+  .note{display:flex;gap:10px;font-size:13.5px;color:var(--muted);background:color-mix(in srgb,var(--sun-1) 12%,var(--card));
+        border-radius:14px;padding:10px 12px;margin:12px 0 14px}
+  ul.copies{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:10px}
+  .copy{display:flex;align-items:center;gap:12px;padding:12px;border-radius:16px;border:1px solid var(--line);background:var(--bg)}
+  .copy img{width:44px;height:44px;border-radius:11px}
+  .copy .t{flex:1;min-width:0}
+  .copy .n{font-weight:650}
+  .copy .v{font-size:12.5px;color:var(--muted)}
+  .get{display:inline-flex;align-items:center;gap:6px;padding:8px 14px;border-radius:12px;background:var(--sunset);color:#fff;font-weight:650;font-size:14px;text-decoration:none}
+  .copy.empty{justify-content:center;color:var(--muted);grid-column:1/-1;padding:22px}
+
+  .after{margin-top:18px;font-size:14.5px}
+
+  /* features */
+  .features{display:grid;grid-template-columns:1fr;gap:14px}
+  @media (min-width:700px){.features{grid-template-columns:repeat(3,1fr)}}
+  .feature{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:20px}
+  .feature .em{font-size:26px}
+  .feature h3{margin:8px 0 4px;font-size:17px}
+  .feature p{margin:0;color:var(--muted);font-size:14.5px}
+
+  details{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px 18px;margin-bottom:10px}
+  summary{cursor:pointer;font-weight:620}
+  details p{color:var(--muted);margin:10px 0 2px;font-size:15px}
+
+  footer{padding:36px 0 60px;color:var(--muted);font-size:14px;text-align:center}
+  footer a{margin:0 8px}
+</style>
+</head>
+<body>
+
+<header class="bar">
+  <div class="wrap">
+    <a class="brand" href="#"><img src="SafeWatch.png" alt="">SafeWatch</a>
+    <a class="pill" href="#install">Install</a>
+  </div>
+</header>
+
+<main>
+  <div class="hero wrap">
+    <img class="icon" src="SafeWatch.png" alt="SafeWatch icon">
+    <h1>Videos without<br><span>the doomscroll.</span></h1>
+    <p>The best of YouTube, minus the comments, the slop and the endless feed. Parental controls built in. No account needed.</p>
+    <a class="btn" href="#install">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11m0 0-4.5-4.5M12 15l4.5-4.5M5 19h14"/></svg>Install SafeWatch</a>
+    <div class="chips">
+      <span class="chip">No comments</span>
+      <span class="chip">No accounts</span>
+      <span class="chip">Slop filtered out</span>
+      <span class="chip">Parental controls</span>
+      <span class="chip">6 languages</span>
+    </div>
+  </div>
+
+  <section id="install">
+    <div class="wrap">
+      <div class="kicker">Install</div>
+      <h2>Get it on your iPhone.</h2>
+      <p class="lede">Open this page in Safari on your iPhone. Accept the Terms, add the DNS profile, then tap any signed install.</p>
+
+      <label class="terms">
+        <input type="checkbox" id="agree">
+        <span>I've read and accept the <a href="terms.html">SafeWatch Terms of Service</a> and the <a href="https://www.youtube.com/t/terms">YouTube Terms of Service</a>.</span>
+      </label>
+
+      <div class="grid">
+        <div class="card">
+          <h3 class="step"><span class="num">1</span>DNS profile</h3>
+          <p class="muted" style="margin:0">Needed for the installs on this page.</p>
+          <ol class="how">
+            <li>Tap <b>Get Profile</b>, then <b>Allow</b>.</li>
+            <li>Settings › <b>Profile Downloaded</b> › <b>Install</b>.</li>
+            <li>General › VPN &amp; Device Management › <b>DNS</b> › <b>SafeWatch</b>.</li>
+          </ol>
+          <a class="btn gated" href="SafeWatchDNS.mobileconfig" aria-disabled="true">Get Profile</a>
+        </div>
+
+        <div class="card">
+          <div class="copies-head"><h3 class="step"><span class="num">2</span>Pick a signed install</h3><span class="count" id="count"></span></div>
+          <div class="note">
+            <span>⚠️</span>
+            <span>Each signed install uses a different certificate. If one won't install or open, its certificate may have been revoked. Try another.</span>
+          </div>
+          <ul class="copies" id="copies"><li class="copy empty">Loading…</li></ul>
+        </div>
+      </div>
+
+      <p class="after muted"><span class="num" style="width:24px;height:24px;font-size:13px;vertical-align:-6px;margin-right:6px">3</span>
+        Once SafeWatch is on your Home Screen, trust it in Settings › General › VPN &amp; Device Management. You can remove the DNS profile afterwards.</p>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <div class="kicker">Why SafeWatch</div>
+      <h2>Made for families. Not baby mode.</h2>
+      <p class="lede">Real creators and real videos, with the parts that keep kids hooked taken out.</p>
+      <div class="features">
+        <div class="feature"><div class="em">🏠</div><h3>Today, then done</h3><p>Top creators, trending and picks from what you like. The list ends instead of scrolling forever.</p></div>
+        <div class="feature"><div class="em">🛡️</div><h3>Parental controls</h3><p>Limits, bedtime, breaks, blocked categories, approved channels only, and a weekly report, all behind a PIN.</p></div>
+        <div class="feature"><div class="em">✨</div><h3>Slop filtered</h3><p>Clickbait, fake drama and AI slop are filtered out before anyone sees them.</p></div>
+        <div class="feature"><div class="em">📱</div><h3>Shorts, capped</h3><p>A collection of 20 Shorts at a time. When it ends, it ends.</p></div>
+        <div class="feature"><div class="em">🔒</div><h3>Private</h3><p>No accounts, no tracking. History and settings stay on the phone.</p></div>
+        <div class="feature"><div class="em">🌍</div><h3>Your language</h3><p>English, Türkçe, Français, Deutsch, Русский and 简体中文.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <div class="kicker">Help</div>
+      <h2>Questions</h2>
+      <details><summary>Tapping Install does nothing.</summary><p>Open this page in Safari, tick the Terms box and add the DNS profile first. If a signed install still won't start, its certificate may be revoked. Pick another one.</p></details>
+      <details><summary>It installed but won't open.</summary><p>Trust it in Settings › General › VPN &amp; Device Management. If it still closes right away, that install's certificate was revoked. Delete it and try another signed install.</p></details>
+      <details><summary>Do I need an account?</summary><p>No. SafeWatch has no accounts at all. Parental controls are set up on the phone with a PIN.</p></details>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <a href="terms.html">Terms</a>·<a href="https://www.youtube.com/t/terms">YouTube Terms</a>·<a href="https://policies.google.com/privacy">Google Privacy</a>
+  <p>SafeWatch is not made, endorsed or sponsored by YouTube or Google.</p>
+</footer>
+
+<script>
+(function(){
+  var KEY = 'safewatch-terms';
+  var agree = document.getElementById('agree');
+  var list = document.getElementById('copies');
+  var countEl = document.getElementById('count');
+
+  function store(get, v){ try { return get ? localStorage.getItem(KEY) : localStorage.setItem(KEY, v); } catch(e){ return null; } }
+  function esc(s){ return String(s || '').replace(/[&<>"']/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; }); }
+  function num(slug){ var m = /(\d+)$/.exec(slug || ''); return m ? +m[1] : 0; }
+
+  // Every install link unlocks once the Terms box is ticked.
+  function gate(){
+    var on = agree.checked;
+    document.querySelectorAll('.gated, .get').forEach(function(a){ a.setAttribute('aria-disabled', on ? 'false' : 'true'); });
+  }
+  agree.checked = store(true) === '1';
+  agree.addEventListener('change', function(){ store(false, agree.checked ? '1' : '0'); gate(); });
+
+  // Every signed install, always shown.
+  function render(slots){
+    if(!slots.length){
+      countEl.textContent = '';
+      list.innerHTML = '<li class="copy empty">No signed installs right now. Check back soon.</li>';
+      return;
+    }
+    countEl.textContent = slots.length + ' available';
+    list.innerHTML = slots.map(function(s, i){
+      return '<li class="copy"><img src="' + esc(s.iconUrl || 'SafeWatch.png') + '" alt="">'
+        + '<div class="t"><div class="n">Signed Install ' + (i + 1) + '</div><div class="v">v' + esc(s.version) + '</div></div>'
+        + '<a class="get" href="' + esc(s.installUrl) + '">'
+        + '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11m0 0-4.5-4.5M12 15l4.5-4.5M5 19h14"/></svg>Install</a></li>';
+    }).join('');
+    gate();
+  }
+
+  fetch('installs/index.json', {cache:'no-store'})
+    .then(function(r){ return r.ok ? r.json() : {slots: []}; })
+    .then(function(d){
+      var slots = ((d && d.slots) || []).slice().sort(function(a,b){ return num(a.slug) - num(b.slug); });
+      render(slots);
+    })
+    .catch(function(){ render([]); });
+  gate();
+})();
+</script>
+</body>
+</html>
