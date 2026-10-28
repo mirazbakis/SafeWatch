@@ -172,6 +172,11 @@
   .how b{color:var(--ink)}
   @media (max-width:560px){.tl{grid-template-columns:36px 1fr;gap:12px}.tl-num{width:36px;height:36px;font-size:16px}
     .timeline::before{left:17px}.tl-body{padding:18px}}
+  .unsigned{max-width:820px;margin:34px auto 0;display:flex;flex-wrap:wrap;gap:16px 24px;align-items:center;justify-content:space-between;
+            padding:22px 24px;border:1px dashed var(--line);border-radius:22px;background:color-mix(in srgb,var(--card) 60%,transparent)}
+  .unsigned h3{font-size:19px;margin:0 0 4px}
+  .unsigned p{margin:0;font-size:15px}
+  .unsigned .ghost{padding:12px 18px}
   .gated[aria-disabled="true"],.get[aria-disabled="true"]{opacity:.38;pointer-events:none;filter:grayscale(.5)}
   .note svg{width:18px;height:18px;flex:none;color:var(--sun-1)}
   .note{display:flex;gap:10px;font-size:13.5px;color:var(--muted);background:color-mix(in srgb,var(--sun-1) 12%,var(--card));
@@ -386,6 +391,15 @@
         </div>
       </li>
     </ol>
+
+    <div class="unsigned">
+      <div>
+        <h3>Prefer to sign it yourself?</h3>
+        <p class="muted">Download the unsigned IPA and install it with AltStore, SideStore or your own certificate.</p>
+      </div>
+      <a class="ghost gated" href="SafeWatch.ipa" download aria-disabled="true">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11m0 0-4.5-4.5M12 15l4.5-4.5M5 19h14"/></svg>Download IPA</a>
+    </div>
   </div>
 </section>
 
